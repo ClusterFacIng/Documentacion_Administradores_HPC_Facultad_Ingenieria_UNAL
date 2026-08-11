@@ -1,0 +1,17 @@
+site_name: Documentación de administración del HPC de la Facultad de Ingeniería UNAL
+site_description: Guías y procedimientos para administradores del HPC
+docs_dir: docs
+nav:
+  - Inicio: index.md
+  - Acceso al HPC:
+      - Sistema de acceso y automatización: Documentacion_Sistema_Acceso_HPC.md
+  - Administración de software:
+      - Administración con Lmod: 01-Administracion-Software-Lmod.md
+theme:
+  name: readthedocs
+markdown_extensions:
+  - admonition
+  - toc:
+      permalink: true
+  - tables
+  - fenced_code
