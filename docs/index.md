@@ -6,6 +6,7 @@ Esta documentación está dirigida a los administradores del HPC de la Facultad 
 
 - [Automatización del sistema de acceso al HPC](Documentacion_Sistema_Acceso_HPC.md)
 - [Administración de Software con Lmod](01-Administracion-Software-Lmod.md)
+- [Configuración y uso de Slurm](02-uso-slurm.md)
 
 ## Objetivos
 
