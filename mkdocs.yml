@@ -7,6 +7,8 @@ nav:
       - Sistema de acceso y automatización: Documentacion_Sistema_Acceso_HPC.md
   - Administración de software:
       - Administración con Lmod: 01-Administracion-Software-Lmod.md
+      - Tutorial de instalación con Spack y Lmod: 03-instalacion-software-con-spack-y-lmod.md
+      - Guía de configuración de Spack y Lmod: 04-configuracion-spack-y-lmod.md
       - Configuración y uso de Slurm: 02-uso-slurm.md
 theme:
   name: readthedocs

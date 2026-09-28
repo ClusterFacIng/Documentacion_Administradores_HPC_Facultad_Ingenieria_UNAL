@@ -6,6 +6,8 @@ Esta documentación está dirigida a los administradores del HPC de la Facultad 
 
 - [Automatización del sistema de acceso al HPC](Documentacion_Sistema_Acceso_HPC.md)
 - [Administración de Software con Lmod](01-Administracion-Software-Lmod.md)
+- [Tutorial de instalación con Spack y Lmod](03-instalacion-software-con-spack-y-lmod.md)
+- [Guía de configuración de Spack y Lmod](04-configuracion-spack-y-lmod.md)
 - [Configuración y uso de Slurm](02-uso-slurm.md)
 
 ## Objetivos

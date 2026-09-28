@@ -208,6 +208,11 @@ which foamRun
 
 Actualmente es una de las soluciones más utilizadas en HPC modernos.
 
+En este proyecto, el flujo operativo concreto de instalación y la configuración actual de Spack se documentan en:
+
+- [Tutorial de instalación con Spack y Lmod](03-instalacion-software-con-spack-y-lmod.md)
+- [Guía de configuración de Spack y Lmod](04-configuracion-spack-y-lmod.md)
+
 Spack automatiza:
 
 - Descarga de software.
