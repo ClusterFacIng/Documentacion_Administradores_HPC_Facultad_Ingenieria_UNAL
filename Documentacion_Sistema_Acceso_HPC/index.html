@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Sistema de acceso y automatización - Documentación de administración del HPC de la Facultad de Ingeniería UNAL</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Sistema de acceso y automatizaci\u00f3n";
+        var mkdocs_page_input_path = "Documentacion_Sistema_Acceso_HPC.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentación de administración del HPC de la Facultad de Ingeniería UNAL
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Inicio</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Acceso al HPC</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Sistema de acceso y automatización</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-proposito-del-documento">1. Propósito del documento</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-arquitectura-general">2. Arquitectura general</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-flujo-general-de-una-solicitud">3. Flujo general de una solicitud</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-estructura-de-google-sheets">4. Estructura de Google Sheets</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#41-columnas-administrativas">4.1. Columnas administrativas</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#5-estados-de-la-solicitud">5. Estados de la solicitud</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#51-nueva-solicitud">5.1. Nueva Solicitud</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#52-solicitud-vpn">5.2. Solicitud VPN</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#importante">Importante</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#6-politicas-vpn">6. Políticas VPN</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#7-registro-hpc">7. Registro HPC</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#71-notificacion-a-google-chat">7.1. Notificación a Google Chat</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#8-registro-manual-en-el-hpc">8. Registro manual en el HPC</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#9-llave-publica-ssh">9. Llave pública SSH</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#91-posible-mejora-futura">9.1. Posible mejora futura</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#10-acceso-hpc">10. Acceso HPC</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#11-generacion-del-id-de-solicitud">11. Generación del ID de solicitud</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#111-consecutivo">11.1. Consecutivo</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#112-consideracion-importante">11.2. Consideración importante</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#12-google-chat">12. Google Chat</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#121-mensajes-enviados">12.1. Mensajes enviados</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#nueva-solicitud">Nueva solicitud</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#solicitud-vpn">Solicitud VPN</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#registro-hpc">Registro HPC</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#acceso-hpc">Acceso HPC</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#13-enlaces-directos-a-la-solicitud">13. Enlaces directos a la solicitud</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#14-organizacion-del-proyecto-apps-script">14. Organización del proyecto Apps Script</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#15-archivo-configuraciongs">15. Archivo Configuracion.gs</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#16-onformsubmite">16. onFormSubmit(e)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#17-onedite">17. onEdit(e)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#18-funciones-principales">18. Funciones principales</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#generaridsolicitud">generarIdSolicitud()</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#generarusuariohpccorreo">generarUsuarioHPC(correo)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#procesarsolicitudvpnsheet-row">procesarSolicitudVPN(sheet, row)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#procesarregistrohpcsheet-row">procesarRegistroHPC(sheet, row)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#procesaraccesohpcsheet-row">procesarAccesoHPC(sheet, row)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#19-control-de-ejecuciones-duplicadas">19. Control de ejecuciones duplicadas</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#20-manejo-de-errores">20. Manejo de errores</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#recomendacion">Recomendación</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#21-pruebas">21. Pruebas</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Administración de software</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../01-Administracion-Software-Lmod/">Administración con Lmod</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03-instalacion-software-con-spack-y-lmod/">Tutorial de instalación con Spack y Lmod</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04-configuracion-spack-y-lmod/">Guía de configuración de Spack y Lmod</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02-uso-slurm/">Configuración y uso de Slurm</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentación de administración del HPC de la Facultad de Ingeniería UNAL</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Acceso al HPC</li>
+      <li class="breadcrumb-item active">Sistema de acceso y automatización</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="automatizacion-del-proceso-de-solicitud-de-ingreso-al-hpc">Automatización del proceso de solicitud de ingreso al HPC<a class="headerlink" href="#automatizacion-del-proceso-de-solicitud-de-ingreso-al-hpc" title="Permanent link">&para;</a></h1>
+<h2 id="1-proposito-del-documento">1. Propósito del documento<a class="headerlink" href="#1-proposito-del-documento" title="Permanent link">&para;</a></h2>
+<p>Este documento describe la automatización implementada para gestionar las solicitudes de acceso al Clúster HPC.</p>
+<p>Su objetivo es servir como guía técnica y operativa para los administradores actuales y futuros del sistema, permitiendo entender:</p>
+<ul>
+<li>Cómo está estructurado el proceso.</li>
+<li>Qué información almacena el formulario y la hoja de cálculo.</li>
+<li>Qué funciones de Google Apps Script intervienen.</li>
+<li>Cómo se gestionan los estados de una solicitud.</li>
+<li>Cómo se envían las notificaciones a Google Chat.</li>
+<li>Cómo se solicita el acceso VPN.</li>
+<li>Cómo se registra al usuario en el HPC.</li>
+<li>Cómo se confirma el acceso al usuario.</li>
+<li>Qué partes del proceso siguen siendo manuales.</li>
+<li>Qué aspectos deben tenerse en cuenta para realizar mantenimiento o modificaciones.</li>
+</ul>
+<hr />
+<h2 id="2-arquitectura-general">2. Arquitectura general<a class="headerlink" href="#2-arquitectura-general" title="Permanent link">&para;</a></h2>
+<p>La automatización utiliza principalmente servicios de Google:</p>
+<pre><code class="language-text">Google Forms
+     │
+     ▼
+Google Sheets
+     │
+     ▼
+Google Apps Script
+     │
+     ├──────────────► Google Chat
+     │
+     ├──────────────► Correo Mesa de Ayuda
+     │
+     └──────────────► Correo Usuario
+</code></pre>
+<p>El proceso comienza cuando un usuario diligencia el formulario de solicitud.</p>
+<p>La respuesta queda registrada automáticamente en Google Sheets. A partir de ese momento, Google Apps Script utiliza los cambios realizados en la hoja para ejecutar las diferentes etapas del proceso.</p>
+<p>La hoja de cálculo funciona como el registro central de cada solicitud.</p>
+<hr />
+<h2 id="3-flujo-general-de-una-solicitud">3. Flujo general de una solicitud<a class="headerlink" href="#3-flujo-general-de-una-solicitud" title="Permanent link">&para;</a></h2>
+<p>El proceso implementado utiliza cuatro estados principales:</p>
+<ol>
+<li><code>Nueva Solicitud</code></li>
+<li><code>Solicitud VPN</code></li>
+<li><code>Registro HPC</code></li>
+<li><code>Acceso HPC</code></li>
+</ol>
+<p>El flujo general es:</p>
+<pre><code class="language-text">Formulario enviado
+    │
+    ▼
+Generar ID de solicitud
+    │
+    ▼
+Estado = Nueva Solicitud
+    │
+    ▼
+Notificación a Google Chat
+    │
+    ▼
+Administrador revisa solicitud
+    │
+    ▼
+Selecciona política VPN
+    │
+    ▼
+Estado = Solicitud VPN
+    │
+    ▼
+Correo a Mesa de Ayuda
+    │
+    ▼
+Estado = Registro HPC
+    │
+    ▼
+Notificación a administradores
+    │
+    ▼
+Administrador registra usuario en HPC
+    │
+    ▼
+Estado = Acceso HPC
+    │
+    ▼
+Correo de confirmación al usuario
+    │
+    ▼
+Notificación a Google Chat
+</code></pre>
+<p>No todas las etapas están automatizadas completamente. El registro efectivo del usuario dentro del HPC continúa requiriendo intervención del administrador.</p>
+<hr />
+<h2 id="4-estructura-de-google-sheets">4. Estructura de Google Sheets<a class="headerlink" href="#4-estructura-de-google-sheets" title="Permanent link">&para;</a></h2>
+<p>La hoja de respuestas contiene inicialmente la información suministrada por el formulario y posteriormente las columnas administrativas.</p>
+<p>La estructura actual es:</p>
+<table>
+<thead>
+<tr>
+<th>Columna</th>
+<th>Campo</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>Marca temporal</td>
+<td>Fecha y hora de envío del formulario</td>
+</tr>
+<tr>
+<td>B</td>
+<td>Nombres</td>
+<td>Nombres del solicitante</td>
+</tr>
+<tr>
+<td>C</td>
+<td>Apellidos</td>
+<td>Apellidos del solicitante</td>
+</tr>
+<tr>
+<td>D</td>
+<td>Correo electrónico institucional</td>
+<td>Correo institucional</td>
+</tr>
+<tr>
+<td>E</td>
+<td>Vinculación a la Universidad</td>
+<td>Tipo de vinculación</td>
+</tr>
+<tr>
+<td>F</td>
+<td>Nombre del proyecto de investigación o grupo</td>
+<td>Proyecto o grupo asociado</td>
+</tr>
+<tr>
+<td>G</td>
+<td>Docente soportando solicitud uso clúster</td>
+<td>Docente que respalda la solicitud</td>
+</tr>
+<tr>
+<td>H</td>
+<td>Justificación del uso del clúster</td>
+<td>Justificación suministrada</td>
+</tr>
+<tr>
+<td>I</td>
+<td>Software o herramientas específicas requeridas</td>
+<td>Software solicitado</td>
+</tr>
+<tr>
+<td>J</td>
+<td>Tiempo solicitado para cuenta</td>
+<td>Tiempo solicitado en semestres</td>
+</tr>
+<tr>
+<td>K</td>
+<td>Espacio para carga de parte pública de llave RSA</td>
+<td>Archivo de llave pública SSH</td>
+</tr>
+<tr>
+<td>L</td>
+<td>ESTADO</td>
+<td>Estado actual de la solicitud</td>
+</tr>
+<tr>
+<td>M</td>
+<td>ID Solicitud</td>
+<td>Identificador único</td>
+</tr>
+<tr>
+<td>N</td>
+<td>POLÍTICA VPN</td>
+<td>Política VPN seleccionada</td>
+</tr>
+<tr>
+<td>O</td>
+<td>Fecha VPN</td>
+<td>Fecha en que se procesó la solicitud VPN</td>
+</tr>
+<tr>
+<td>P</td>
+<td>Fecha Registro HPC</td>
+<td>Fecha en que se procesó el registro HPC</td>
+</tr>
+<tr>
+<td>Q</td>
+<td>Usuario HPC</td>
+<td>Nombre de usuario creado para el HPC</td>
+</tr>
+<tr>
+<td>R</td>
+<td>Fecha Acceso HPC</td>
+<td>Fecha en que se confirmó el acceso</td>
+</tr>
+</tbody>
+</table>
+<h3 id="41-columnas-administrativas">4.1. Columnas administrativas<a class="headerlink" href="#41-columnas-administrativas" title="Permanent link">&para;</a></h3>
+<p>Las columnas <code>L</code> a <code>R</code> son utilizadas por la automatización.</p>
+<p>Es importante no cambiar su posición sin actualizar las referencias de columna en Apps Script.</p>
+<p>Actualmente:</p>
+<pre><code class="language-text">L = 12 → ESTADO
+M = 13 → ID Solicitud
+N = 14 → POLÍTICA VPN
+O = 15 → Fecha VPN
+P = 16 → Fecha Registro HPC
+Q = 17 → Usuario HPC
+R = 18 → Fecha Acceso HPC
+</code></pre>
+<p>Si se insertan o eliminan columnas antes de estas, las funciones deberán revisarse.</p>
+<hr />
+<h2 id="5-estados-de-la-solicitud">5. Estados de la solicitud<a class="headerlink" href="#5-estados-de-la-solicitud" title="Permanent link">&para;</a></h2>
+<h3 id="51-nueva-solicitud">5.1. Nueva Solicitud<a class="headerlink" href="#51-nueva-solicitud" title="Permanent link">&para;</a></h3>
+<p>Es el estado inicial.</p>
+<p>Se asigna automáticamente cuando el usuario envía el formulario.</p>
+<p>Al generarse la solicitud:</p>
+<ol>
+<li>Se obtiene la información del formulario.</li>
+<li>Se genera un ID único.</li>
+<li>Se establece el estado <code>Nueva Solicitud</code>.</li>
+<li>Se envía una notificación al espacio de Google Chat de los administradores.</li>
+</ol>
+<p>El administrador debe revisar la información antes de avanzar al siguiente estado.</p>
+<hr />
+<h3 id="52-solicitud-vpn">5.2. Solicitud VPN<a class="headerlink" href="#52-solicitud-vpn" title="Permanent link">&para;</a></h3>
+<p>Representa una solicitud que ya fue revisada por un administrador y está lista para solicitar el acceso a la VPN.</p>
+<p>Antes de cambiar el estado, el administrador debe seleccionar una de las políticas VPN disponibles:</p>
+<pre><code class="language-text">FAC_ING_CLUSTER_DUAL
+FAC_ING_CLUSTER_PRINCIPAL
+FAC_ING_CLUSTER_GNUM
+FAC_ING_CLUSTER_ADMIN
+</code></pre>
+<p>Cuando el estado cambia a:</p>
+<pre><code class="language-text">Solicitud VPN
+</code></pre>
+<p>Apps Script:</p>
+<ol>
+<li>Verifica que exista una política VPN válida.</li>
+<li>Obtiene los datos del usuario.</li>
+<li>Genera el correo para la Mesa de Ayuda.</li>
+<li>Incluye la política VPN seleccionada.</li>
+<li>Envía el correo.</li>
+<li>Registra la fecha en <code>Fecha VPN</code>.</li>
+<li>Envía una notificación al espacio de Google Chat.</li>
+</ol>
+<h4 id="importante">Importante<a class="headerlink" href="#importante" title="Permanent link">&para;</a></h4>
+<p>Actualmente la política VPN <strong>no se bloquea físicamente en Google Sheets</strong>.</p>
+<p>La columna <code>N</code> permanece editable.</p>
+<p>Sin embargo, la automatización evita procesar nuevamente una solicitud cuando <code>Fecha VPN</code> ya tiene un valor:</p>
+<pre><code class="language-javascript">if (fechaVPN) return;
+</code></pre>
+<p>Esto evita que se envíen correos VPN duplicados por modificaciones posteriores.</p>
+<p>La política utilizada queda registrada en:</p>
+<ul>
+<li>El correo enviado a la Mesa de Ayuda.</li>
+<li>El mensaje enviado a Google Chat.</li>
+<li>La columna <code>N</code> de la solicitud.</li>
+</ul>
+<hr />
+<h2 id="6-politicas-vpn">6. Políticas VPN<a class="headerlink" href="#6-politicas-vpn" title="Permanent link">&para;</a></h2>
+<p>Las políticas actualmente soportadas son:</p>
+<pre><code class="language-text">FAC_ING_CLUSTER_DUAL
+FAC_ING_CLUSTER_PRINCIPAL
+FAC_ING_CLUSTER_GNUM
+FAC_ING_CLUSTER_ADMIN
+</code></pre>
+<p>Estas políticas están definidas en el archivo de configuración.</p>
+<p>Ejemplo:</p>
+<pre><code class="language-javascript">const POLITICA_VPN_DUAL =
+  &quot;FAC_ING_CLUSTER_DUAL&quot;;
+
+const POLITICA_VPN_PRINCIPAL =
+  &quot;FAC_ING_CLUSTER_PRINCIPAL&quot;;
+
+const POLITICA_VPN_GNUM =
+  &quot;FAC_ING_CLUSTER_GNUM&quot;;
+
+const POLITICA_VPN_ADMIN =
+  &quot;FAC_ING_CLUSTER_ADMIN&quot;;
+</code></pre>
+<p>Para agregar, eliminar o cambiar una política, debe revisarse el archivo de configuración y la validación utilizada por <code>procesarSolicitudVPN()</code>.</p>
+<hr />
+<h2 id="7-registro-hpc">7. Registro HPC<a class="headerlink" href="#7-registro-hpc" title="Permanent link">&para;</a></h2>
+<p>El estado:</p>
+<pre><code class="language-text">Registro HPC
+</code></pre>
+<p>indica que la solicitud VPN ya fue procesada y que el usuario está listo para ser registrado en el HPC.</p>
+<p>En esta etapa el sistema genera el nombre de usuario HPC a partir del correo institucional.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">Correo:
+npiraquive@unal.edu.co
+
+Usuario HPC:
+npiraquive
+</code></pre>
+<p>La función utilizada para esto es:</p>
+<pre><code class="language-javascript">generarUsuarioHPC(correo)
+</code></pre>
+<p>El usuario generado se almacena en:</p>
+<pre><code class="language-text">Q = Usuario HPC
+</code></pre>
+<p>La fecha se almacena en:</p>
+<pre><code class="language-text">P = Fecha Registro HPC
+</code></pre>
+<h3 id="71-notificacion-a-google-chat">7.1. Notificación a Google Chat<a class="headerlink" href="#71-notificacion-a-google-chat" title="Permanent link">&para;</a></h3>
+<p>Cuando se procesa este estado se envía un mensaje a los administradores con información como:</p>
+<ul>
+<li>ID de solicitud.</li>
+<li>Nombre del usuario.</li>
+<li>Correo.</li>
+<li>Usuario HPC.</li>
+<li>Enlace directo a la fila de la solicitud.</li>
+<li>Acción sugerida para realizar el registro.</li>
+</ul>
+<p>El mensaje permite al administrador localizar rápidamente la solicitud.</p>
+<hr />
+<h2 id="8-registro-manual-en-el-hpc">8. Registro manual en el HPC<a class="headerlink" href="#8-registro-manual-en-el-hpc" title="Permanent link">&para;</a></h2>
+<p>Actualmente esta parte del proceso no está automatizada completamente.</p>
+<p>El administrador debe conectarse al entorno del HPC y realizar el registro del usuario.</p>
+<p>El procedimiento general es:</p>
+<ol>
+<li>Crear el usuario.</li>
+<li>Crear su directorio <code>home</code>, si corresponde al procedimiento configurado en el servidor.</li>
+<li>Crear el directorio <code>.ssh</code>.</li>
+<li>Configurar los permisos correspondientes.</li>
+<li>Crear o modificar el archivo:</li>
+</ol>
+<pre><code class="language-text">authorized_keys
+</code></pre>
+<ol>
+<li>Copiar la llave pública SSH proporcionada por el usuario.</li>
+<li>Verificar que el usuario pueda autenticarse mediante SSH.</li>
+</ol>
+<p>El sistema automatizado genera el usuario y notifica al administrador, pero la ejecución de estos comandos sobre el servidor continúa siendo responsabilidad del administrador.</p>
+<hr />
+<h2 id="9-llave-publica-ssh">9. Llave pública SSH<a class="headerlink" href="#9-llave-publica-ssh" title="Permanent link">&para;</a></h2>
+<p>El formulario permite al usuario proporcionar la parte pública de su llave SSH.</p>
+<p>Actualmente la información puede quedar almacenada como un archivo en Google Drive asociado a la respuesta del formulario.</p>
+<p>El archivo corresponde a la llave pública generada por el usuario, por ejemplo:</p>
+<pre><code class="language-text">ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQ...
+</code></pre>
+<p>La automatización actual no utiliza directamente el contenido del archivo para crear el usuario en el HPC.</p>
+<p>El administrador debe consultar la solicitud y utilizar la llave pública durante el registro del usuario.</p>
+<h3 id="91-posible-mejora-futura">9.1. Posible mejora futura<a class="headerlink" href="#91-posible-mejora-futura" title="Permanent link">&para;</a></h3>
+<p>Una futura versión podría acceder automáticamente al archivo almacenado en Drive, leer su contenido y generar los comandos necesarios para configurar:</p>
+<pre><code class="language-text">~/.ssh/authorized_keys
+</code></pre>
+<p>Esto reduciría la intervención manual del administrador.</p>
+<hr />
+<h2 id="10-acceso-hpc">10. Acceso HPC<a class="headerlink" href="#10-acceso-hpc" title="Permanent link">&para;</a></h2>
+<p>El estado:</p>
+<pre><code class="language-text">Acceso HPC
+</code></pre>
+<p>representa la etapa final.</p>
+<p>Cuando el administrador cambia la solicitud a este estado, Apps Script:</p>
+<ol>
+<li>Obtiene el usuario HPC.</li>
+<li>Obtiene el correo institucional.</li>
+<li>Envía un correo al usuario.</li>
+<li>Informa que el acceso al HPC fue habilitado.</li>
+<li>Incluye el nombre de usuario HPC.</li>
+<li>Incluye el enlace a la documentación de conexión.</li>
+<li>Registra la fecha en <code>Fecha Acceso HPC</code>.</li>
+<li>Envía una notificación a Google Chat.</li>
+</ol>
+<p>La fecha queda registrada en:</p>
+<pre><code class="language-text">R = Fecha Acceso HPC
+</code></pre>
+<hr />
+<h2 id="11-generacion-del-id-de-solicitud">11. Generación del ID de solicitud<a class="headerlink" href="#11-generacion-del-id-de-solicitud" title="Permanent link">&para;</a></h2>
+<p>Cada solicitud recibe un identificador único con el formato:</p>
+<pre><code class="language-text">HPC-AAAA-NNNN
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">HPC-2026-0001
+HPC-2026-0002
+HPC-2026-0003
+</code></pre>
+<p>El ID se almacena en:</p>
+<pre><code class="language-text">M = ID Solicitud
+</code></pre>
+<h3 id="111-consecutivo">11.1. Consecutivo<a class="headerlink" href="#111-consecutivo" title="Permanent link">&para;</a></h3>
+<p>El consecutivo se administra mediante:</p>
+<pre><code class="language-javascript">PropertiesService
+</code></pre>
+<p>utilizando una propiedad llamada:</p>
+<pre><code class="language-text">ULTIMO_ID
+</code></pre>
+<p>La generación utiliza un bloqueo:</p>
+<pre><code class="language-javascript">LockService.getScriptLock()
+</code></pre>
+<p>Esto evita que dos solicitudes procesadas simultáneamente obtengan el mismo número.</p>
+<p>La función utilizada es:</p>
+<pre><code class="language-javascript">function generarIdSolicitud() {
+    const lock = LockService.getScriptLock();
+
+    lock.waitLock(30000);
+
+    try {
+
+        const props =
+            PropertiesService.getScriptProperties();
+
+        let contador =
+            Number(props.getProperty(&quot;ULTIMO_ID&quot;)) || 0;
+
+        contador++;
+
+        props.setProperty(
+            &quot;ULTIMO_ID&quot;,
+            contador.toString()
+        );
+
+        const anio =
+            new Date().getFullYear();
+
+        return `HPC-${anio}-${Utilities.formatString(&quot;%04d&quot;, contador)}`;
+
+    } finally {
+
+        lock.releaseLock();
+
+    }
+}
+</code></pre>
+<h3 id="112-consideracion-importante">11.2. Consideración importante<a class="headerlink" href="#112-consideracion-importante" title="Permanent link">&para;</a></h3>
+<p>El contador es independiente del número de filas de la hoja.</p>
+<p>No se debe calcular el siguiente ID contando las filas existentes.</p>
+<p>El valor persistente está en <code>PropertiesService</code>.</p>
+<hr />
+<h2 id="12-google-chat">12. Google Chat<a class="headerlink" href="#12-google-chat" title="Permanent link">&para;</a></h2>
+<p>Google Chat se utiliza como mecanismo de notificación para los administradores.</p>
+<p>Actualmente se utiliza un <strong>webhook de Google Chat</strong>, no una Google Chat App.</p>
+<p>El webhook está almacenado en el archivo de configuración:</p>
+<pre><code class="language-javascript">const CHAT_WEBHOOK = &quot;...&quot;;
+</code></pre>
+<h3 id="121-mensajes-enviados">12.1. Mensajes enviados<a class="headerlink" href="#121-mensajes-enviados" title="Permanent link">&para;</a></h3>
+<p>Dependiendo del estado, se pueden enviar notificaciones como:</p>
+<h4 id="nueva-solicitud">Nueva solicitud<a class="headerlink" href="#nueva-solicitud" title="Permanent link">&para;</a></h4>
+<pre><code class="language-text">🆕 NUEVA SOLICITUD
+
+ID:
+HPC-2026-0001
+
+Usuario:
+...
+
+Correo:
+...
+
+Abrir solicitud:
+...
+</code></pre>
+<h4 id="solicitud-vpn">Solicitud VPN<a class="headerlink" href="#solicitud-vpn" title="Permanent link">&para;</a></h4>
+<pre><code class="language-text">📨 SOLICITUD VPN ENVIADA
+
+ID:
+HPC-2026-0001
+
+Usuario:
+...
+
+Correo:
+...
+
+Política VPN:
+FAC_ING_CLUSTER_PRINCIPAL
+
+Abrir solicitud:
+...
+</code></pre>
+<h4 id="registro-hpc">Registro HPC<a class="headerlink" href="#registro-hpc" title="Permanent link">&para;</a></h4>
+<pre><code class="language-text">🖥️ REGISTRO HPC
+
+ID:
+HPC-2026-0001
+
+Usuario HPC:
+...
+
+Abrir solicitud:
+...
+</code></pre>
+<h4 id="acceso-hpc">Acceso HPC<a class="headerlink" href="#acceso-hpc" title="Permanent link">&para;</a></h4>
+<pre><code class="language-text">✅ ACCESO HPC HABILITADO
+
+ID:
+HPC-2026-0001
+
+Usuario HPC:
+...
+
+Abrir solicitud:
+...
+</code></pre>
+<hr />
+<h2 id="13-enlaces-directos-a-la-solicitud">13. Enlaces directos a la solicitud<a class="headerlink" href="#13-enlaces-directos-a-la-solicitud" title="Permanent link">&para;</a></h2>
+<p>Las notificaciones incluyen un enlace directo a la fila correspondiente en Google Sheets.</p>
+<p>El enlace se construye utilizando:</p>
+<pre><code class="language-javascript">const spreadsheetId =
+    SpreadsheetApp
+        .getActiveSpreadsheet()
+        .getId();
+
+const gid =
+    sheet.getSheetId();
+</code></pre>
+<p>Y posteriormente:</p>
+<pre><code class="language-javascript">const linkFila =
+    `https://docs.google.com/spreadsheets/d/${spreadsheetId}/edit#gid=${gid}&amp;range=A${row}:R${row}`;
+</code></pre>
+<p>Esto permite que el administrador pueda pasar directamente desde Google Chat a la solicitud correspondiente.</p>
+<hr />
+<h2 id="14-organizacion-del-proyecto-apps-script">14. Organización del proyecto Apps Script<a class="headerlink" href="#14-organizacion-del-proyecto-apps-script" title="Permanent link">&para;</a></h2>
+<p>El proyecto se encuentra dividido en archivos <code>.gs</code> para facilitar el mantenimiento.</p>
+<p>Una estructura recomendada es:</p>
+<pre><code class="language-text">Apps Script
+│
+├── Codigo.gs
+├── Estados.gs
+└── Configuracion.gs
+</code></pre>
+<p>La división por archivos no modifica la forma en que Apps Script ejecuta el proyecto. Todos los archivos forman parte del mismo proyecto.</p>
+<hr />
+<h2 id="15-archivo-configuraciongs">15. Archivo <code>Configuracion.gs</code><a class="headerlink" href="#15-archivo-configuraciongs" title="Permanent link">&para;</a></h2>
+<p>Este archivo contiene valores que pueden cambiar sin necesidad de modificar la lógica principal.</p>
+<p>Ejemplo:</p>
+<pre><code class="language-javascript">// ===== GOOGLE CHAT =====
+
+const CHAT_WEBHOOK =
+    &quot;...&quot;;
+
+// ===== CORREOS =====
+
+const CORREO_MESA_AYUDA =
+    &quot;npiraquive@unal.edu.co&quot;;
+
+// ===== DOCUMENTACIÓN =====
+
+const URL_DOCUMENTACION_HPC =
+    &quot;...&quot;;
+
+// ===== ESTADOS =====
+
+const ESTADO_NUEVA_SOLICITUD =
+    &quot;Nueva Solicitud&quot;;
+
+const ESTADO_SOLICITUD_VPN =
+    &quot;Solicitud VPN&quot;;
+
+const ESTADO_REGISTRO_HPC =
+    &quot;Registro HPC&quot;;
+
+const ESTADO_ACCESO_HPC =
+    &quot;Acceso HPC&quot;;
+
+// ===== POLÍTICAS VPN =====
+
+const POLITICA_VPN_DUAL =
+    &quot;FAC_ING_CLUSTER_DUAL&quot;;
+
+const POLITICA_VPN_PRINCIPAL =
+    &quot;FAC_ING_CLUSTER_PRINCIPAL&quot;;
+
+const POLITICA_VPN_GNUM =
+    &quot;FAC_ING_CLUSTER_GNUM&quot;;
+
+const POLITICA_VPN_ADMIN =
+    &quot;FAC_ING_CLUSTER_ADMIN&quot;;
+</code></pre>
+<p>La idea es evitar valores repetidos dentro de las funciones.</p>
+<p>Por ejemplo, es preferible:</p>
+<pre><code class="language-javascript">to: CORREO_MESA_AYUDA
+</code></pre>
+<p>que:</p>
+<pre><code class="language-javascript">to: &quot;npiraquive@unal.edu.co&quot;
+</code></pre>
+<hr />
+<h2 id="16-onformsubmite">16. <code>onFormSubmit(e)</code><a class="headerlink" href="#16-onformsubmite" title="Permanent link">&para;</a></h2>
+<p>La función <code>onFormSubmit(e)</code> se ejecuta cuando llega una nueva respuesta del formulario.</p>
+<p>Su responsabilidad principal es iniciar el proceso.</p>
+<p>Conceptualmente realiza:</p>
+<pre><code class="language-text">Nueva respuesta
+            ↓
+Obtener fila
+            ↓
+Generar ID
+            ↓
+Guardar ID
+            ↓
+Establecer estado inicial
+            ↓
+Enviar mensaje Google Chat
+</code></pre>
+<p>Esta función no debe utilizarse para procesar manualmente estados posteriores.</p>
+<hr />
+<h2 id="17-onedite">17. <code>onEdit(e)</code><a class="headerlink" href="#17-onedite" title="Permanent link">&para;</a></h2>
+<p>La función <code>onEdit(e)</code> es la encargada de detectar cambios realizados en la columna <code>ESTADO</code>.</p>
+<p>La columna de estado actualmente es:</p>
+<pre><code class="language-text">L = 12
+</code></pre>
+<p>Conceptualmente:</p>
+<pre><code class="language-javascript">if (col !== 12) return;
+</code></pre>
+<p>Posteriormente identifica el nuevo estado:</p>
+<pre><code class="language-javascript">const nuevoEstado = e.value;
+</code></pre>
+<p>Y ejecuta la función correspondiente.</p>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">Solicitud VPN
+            ↓
+procesarSolicitudVPN()
+
+Registro HPC
+            ↓
+procesarRegistroHPC()
+
+Acceso HPC
+            ↓
+procesarAccesoHPC()
+</code></pre>
+<p>Esto permite mantener separada la lógica de cada etapa.</p>
+<hr />
+<h2 id="18-funciones-principales">18. Funciones principales<a class="headerlink" href="#18-funciones-principales" title="Permanent link">&para;</a></h2>
+<h3 id="generaridsolicitud"><code>generarIdSolicitud()</code><a class="headerlink" href="#generaridsolicitud" title="Permanent link">&para;</a></h3>
+<p>Genera el identificador único de cada solicitud.</p>
+<p>Utiliza:</p>
+<ul>
+<li><code>PropertiesService</code></li>
+<li><code>LockService</code></li>
+</ul>
+<h3 id="generarusuariohpccorreo"><code>generarUsuarioHPC(correo)</code><a class="headerlink" href="#generarusuariohpccorreo" title="Permanent link">&para;</a></h3>
+<p>Obtiene el nombre de usuario HPC a partir del correo institucional.</p>
+<p>Ejemplo:</p>
+<pre><code class="language-text">npiraquive@unal.edu.co
+                    ↓
+npiraquive
+</code></pre>
+<h3 id="procesarsolicitudvpnsheet-row"><code>procesarSolicitudVPN(sheet, row)</code><a class="headerlink" href="#procesarsolicitudvpnsheet-row" title="Permanent link">&para;</a></h3>
+<p>Responsable del estado:</p>
+<pre><code class="language-text">Solicitud VPN
+</code></pre>
+<p>Realiza:</p>
+<ul>
+<li>Validación de política VPN.</li>
+<li>Generación del correo.</li>
+<li>Envío a Mesa de Ayuda.</li>
+<li>Registro de fecha VPN.</li>
+<li>Notificación a Google Chat.</li>
+</ul>
+<h3 id="procesarregistrohpcsheet-row"><code>procesarRegistroHPC(sheet, row)</code><a class="headerlink" href="#procesarregistrohpcsheet-row" title="Permanent link">&para;</a></h3>
+<p>Responsable del estado:</p>
+<pre><code class="language-text">Registro HPC
+</code></pre>
+<p>Realiza:</p>
+<ul>
+<li>Generación del usuario HPC.</li>
+<li>Registro del usuario en la hoja.</li>
+<li>Registro de fecha.</li>
+<li>Notificación al administrador mediante Google Chat.</li>
+</ul>
+<p>El registro efectivo dentro del servidor HPC continúa siendo manual.</p>
+<h3 id="procesaraccesohpcsheet-row"><code>procesarAccesoHPC(sheet, row)</code><a class="headerlink" href="#procesaraccesohpcsheet-row" title="Permanent link">&para;</a></h3>
+<p>Responsable del estado:</p>
+<pre><code class="language-text">Acceso HPC
+</code></pre>
+<p>Realiza:</p>
+<ul>
+<li>Validación del usuario HPC.</li>
+<li>Envío del correo al usuario.</li>
+<li>Registro de fecha de acceso.</li>
+<li>Notificación a Google Chat.</li>
+</ul>
+<hr />
+<h2 id="19-control-de-ejecuciones-duplicadas">19. Control de ejecuciones duplicadas<a class="headerlink" href="#19-control-de-ejecuciones-duplicadas" title="Permanent link">&para;</a></h2>
+<p>Cada etapa utiliza una columna de fecha como indicador de que ya fue procesada.</p>
+<p>Por ejemplo, VPN:</p>
+<pre><code class="language-javascript">const fechaVPN =
+    sheet.getRange(row, 15).getValue();
+
+if (fechaVPN) return;
+</code></pre>
+<p>Registro HPC:</p>
+<pre><code class="language-javascript">const fechaRegistro =
+    sheet.getRange(row, 16).getValue();
+
+if (fechaRegistro) return;
+</code></pre>
+<p>Acceso HPC:</p>
+<pre><code class="language-javascript">const fechaAcceso =
+    sheet.getRange(row, 18).getValue();
+
+if (fechaAcceso) return;
+</code></pre>
+<p>Esto es importante porque un administrador puede modificar varias veces el estado de una solicitud.</p>
+<p>Las fechas funcionan como una barrera para evitar:</p>
+<ul>
+<li>Correos duplicados.</li>
+<li>Creación repetida de usuarios.</li>
+<li>Notificaciones repetidas.</li>
+</ul>
+<hr />
+<h2 id="20-manejo-de-errores">20. Manejo de errores<a class="headerlink" href="#20-manejo-de-errores" title="Permanent link">&para;</a></h2>
+<p>Los servicios externos utilizados por Apps Script pueden generar errores.</p>
+<p>Entre ellos:</p>
+<ul>
+<li><code>MailApp</code></li>
+<li><code>UrlFetchApp</code></li>
+<li>Google Sheets</li>
+<li>Google Chat</li>
+<li>Google Drive</li>
+</ul>
+<p>Cuando se utiliza <code>MailApp.sendEmail()</code>, un error de permisos puede detener la ejecución.</p>
+<p>Por ejemplo, Apps Script puede solicitar el permiso:</p>
+<pre><code class="language-text">https://www.googleapis.com/auth/script.send_mail
+</code></pre>
+<p>Después de agregar nuevas funciones que utilizan servicios adicionales, puede ser necesario volver a autorizar el proyecto.</p>
+<h3 id="recomendacion">Recomendación<a class="headerlink" href="#recomendacion" title="Permanent link">&para;</a></h3>
+<p>Ante un error:</p>
+<ol>
+<li>Abrir el proyecto de Apps Script.</li>
+<li>Ir a <strong>Ejecuciones</strong>.</li>
+<li>Revisar la ejecución correspondiente.</li>
+<li>Identificar la función y línea que produjo el error.</li>
+<li>Corregir el problema.</li>
+<li>Repetir la prueba con una solicitud de prueba.</li>
+</ol>
+<hr />
+<h2 id="21-pruebas">21. Pruebas<a class="headerlink" href="#21-pruebas" title="Permanent link">&para;</a></h2>
+<p>Para realizar pruebas se recomienda utilizar solicitudes ficticias.</p>
+<p>No se deben realizar pruebas iniciales con solicitudes reales si pueden generar:</p>
+<ul>
+<li>Correos reales a Mesa de Ayuda.</li>
+<li>Creación de cuentas reales.</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href=".." class="btn btn-neutral float-left" title="Inicio"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../01-Administracion-Software-Lmod/" class="btn btn-neutral float-right" title="Administración con Lmod">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../01-Administracion-Software-Lmod/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

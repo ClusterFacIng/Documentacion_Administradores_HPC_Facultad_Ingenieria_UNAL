@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Guía de configuración de Spack y Lmod - Documentación de administración del HPC de la Facultad de Ingeniería UNAL</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Gu\u00eda de configuraci\u00f3n de Spack y Lmod";
+        var mkdocs_page_input_path = "04-configuracion-spack-y-lmod.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentación de administración del HPC de la Facultad de Ingeniería UNAL
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Inicio</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Acceso al HPC</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../Documentacion_Sistema_Acceso_HPC/">Sistema de acceso y automatización</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Administración de software</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../01-Administracion-Software-Lmod/">Administración con Lmod</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03-instalacion-software-con-spack-y-lmod/">Tutorial de instalación con Spack y Lmod</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Guía de configuración de Spack y Lmod</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-proposito">1. Propósito</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-arquitectura-general">2. Arquitectura general</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-versiones-y-ubicaciones">3. Versiones y ubicaciones</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-configuracion-de-modulos-de-spack">4. Configuración de módulos de Spack</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#decisiones-principales">Decisiones principales</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#5-configuracion-de-modulepath">5. Configuración de MODULEPATH</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#6-instalacion-de-nuevo-software">6. Instalación de nuevo software</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#7-permisos-recomendados">7. Permisos recomendados</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#8-verificaciones-rapidas">8. Verificaciones rápidas</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#9-estado-actual">9. Estado actual</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02-uso-slurm/">Configuración y uso de Slurm</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentación de administración del HPC de la Facultad de Ingeniería UNAL</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Administración de software</li>
+      <li class="breadcrumb-item active">Guía de configuración de Spack y Lmod</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="guia-de-administracion-de-la-configuracion-spack-y-lmod">Guía de administración de la configuración Spack y Lmod<a class="headerlink" href="#guia-de-administracion-de-la-configuracion-spack-y-lmod" title="Permanent link">&para;</a></h1>
+<h2 id="1-proposito">1. Propósito<a class="headerlink" href="#1-proposito" title="Permanent link">&para;</a></h2>
+<p>Este documento describe la configuración actual de Spack y Lmod en el clúster, las decisiones adoptadas y las consideraciones que deben tenerse en cuenta para futuras instalaciones y mantenimientos.</p>
+<p>La intención es que funcione como referencia técnica para administradores del HPC y no como un tutorial básico de uso.</p>
+<h2 id="2-arquitectura-general">2. Arquitectura general<a class="headerlink" href="#2-arquitectura-general" title="Permanent link">&para;</a></h2>
+<p>La infraestructura se compone de tres elementos principales:</p>
+<ol>
+<li>Spack, responsable de instalar y gestionar el software.</li>
+<li>Lmod, responsable de exponer los módulos a los usuarios.</li>
+<li><code>MODULEPATH</code>, que define dónde busca Lmod los módulos disponibles.</li>
+</ol>
+<p>El flujo general es:</p>
+<pre><code class="language-text">Spack
+  │
+  ├── Instala software
+  │
+  └── Genera módulos Lua para Lmod
+          │
+          ▼
+/opt/ohpc/pub/moduledeps/spack/Core
+          │
+          ▼
+        Lmod
+          │
+          ▼
+      Usuarios
+</code></pre>
+<h2 id="3-versiones-y-ubicaciones">3. Versiones y ubicaciones<a class="headerlink" href="#3-versiones-y-ubicaciones" title="Permanent link">&para;</a></h2>
+<p>La configuración actual usa:</p>
+<table>
+<thead>
+<tr>
+<th>Componente</th>
+<th>Versión</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Spack</td>
+<td>0.23.1</td>
+</tr>
+<tr>
+<td>Lmod</td>
+<td>8.7.59</td>
+</tr>
+<tr>
+<td>GCC principal</td>
+<td>14.2.0</td>
+</tr>
+</tbody>
+</table>
+<p>Ubicaciones relevantes:</p>
+<pre><code class="language-text">/opt/ohpc/pub/apps/spack/0.23.1
+/opt/ohpc/pub/apps/spack/0.23.1/bin/spack
+/opt/ohpc/pub/apps/spack/local
+/opt/ohpc/pub/moduledeps/spack
+/opt/ohpc/pub/moduledeps/spack/Core
+</code></pre>
+<h2 id="4-configuracion-de-modulos-de-spack">4. Configuración de módulos de Spack<a class="headerlink" href="#4-configuracion-de-modulos-de-spack" title="Permanent link">&para;</a></h2>
+<p>La configuración principal vive en:</p>
+<pre><code class="language-text">/root/.spack/modules.yaml
+</code></pre>
+<p>La base de la configuración actual es:</p>
+<pre><code class="language-yaml">modules:
+  default:
+    roots:
+      lmod: /opt/ohpc/pub/moduledeps/spack
+
+    enable:
+    - lmod
+
+    arch_folder: false
+
+    lmod:
+      hide_implicits: true
+
+      projections:
+        all: '{name}/{version}'
+
+      all:
+        autoload: direct
+
+      hierarchy:
+      - mpi
+
+      core_compilers:
+      - gcc@=14.2.0
+</code></pre>
+<h3 id="decisiones-principales">Decisiones principales<a class="headerlink" href="#decisiones-principales" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Solo se generan módulos Lmod.</li>
+<li>No se generan módulos Tcl.</li>
+<li>Los nombres de módulos se simplifican a <code>nombre/version</code>.</li>
+<li>Se conserva el hash de Spack para diferenciar instalaciones.</li>
+<li>Las dependencias directas se cargan automáticamente.</li>
+<li>Las dependencias implícitas se ocultan de <code>module avail</code>.</li>
+<li>Se mantiene la jerarquía MPI para compatibilidad futura.</li>
+</ul>
+<h2 id="5-configuracion-de-modulepath">5. Configuración de <code>MODULEPATH</code><a class="headerlink" href="#5-configuracion-de-modulepath" title="Permanent link">&para;</a></h2>
+<p>La ruta global expuesta por Lmod incluye:</p>
+<pre><code class="language-text">/opt/ohpc/pub/moduledeps/spack/Core
+</code></pre>
+<p>Esta ruta está declarada en:</p>
+<pre><code class="language-text">/opt/ohpc/admin/lmod/8.7.59/init/.modulespath
+/opt/ohpc/admin/lmod/lmod/init/.modulespath
+</code></pre>
+<p>El punto clave es que la ruta de Spack/Core ya forma parte del <code>MODULEPATH</code> global, así que los usuarios no necesitan ejecutar <code>module use</code> manualmente.</p>
+<h2 id="6-instalacion-de-nuevo-software">6. Instalación de nuevo software<a class="headerlink" href="#6-instalacion-de-nuevo-software" title="Permanent link">&para;</a></h2>
+<p>El flujo administrativo recomendado es:</p>
+<pre><code class="language-bash">module load spack
+umask 022
+
+spack list &lt;paquete&gt;
+spack spec -Il &lt;paquete&gt;
+spack install &lt;paquete&gt;
+spack find &lt;paquete&gt;
+module avail &lt;paquete&gt;
+module load &lt;paquete&gt;/&lt;version&gt;-&lt;hash&gt;
+</code></pre>
+<p>Si la instalación modifica los módulos disponibles, puede regenerarse el árbol con:</p>
+<pre><code class="language-bash">spack module lmod refresh -y --delete-tree
+</code></pre>
+<h2 id="7-permisos-recomendados">7. Permisos recomendados<a class="headerlink" href="#7-permisos-recomendados" title="Permanent link">&para;</a></h2>
+<p>Los módulos son compartidos por todos los usuarios del clúster, así que conviene crear el árbol con permisos de lectura y ejecución para otros usuarios.</p>
+<p>Antes de instalar o regenerar módulos, use:</p>
+<pre><code class="language-bash">umask 022
+</code></pre>
+<p>Esto ayuda a evitar problemas cuando el árbol se crea bajo una política de umask más restrictiva.</p>
+<h2 id="8-verificaciones-rapidas">8. Verificaciones rápidas<a class="headerlink" href="#8-verificaciones-rapidas" title="Permanent link">&para;</a></h2>
+<p>Comandos útiles para validar la configuración:</p>
+<pre><code class="language-bash">spack config blame modules
+module avail
+module spider &lt;paquete&gt;
+spack find
+</code></pre>
+<p>Si se detectan problemas de visibilidad, también conviene revisar los permisos del árbol de módulos:</p>
+<pre><code class="language-bash">find /opt/ohpc/pub/moduledeps/spack -type d ! -perm 755 -print
+find /opt/ohpc/pub/moduledeps/spack -type f ! -perm 644 -print
+</code></pre>
+<h2 id="9-estado-actual">9. Estado actual<a class="headerlink" href="#9-estado-actual" title="Permanent link">&para;</a></h2>
+<p>La configuración actual permite que cualquier usuario cargue directamente los paquetes instalados por Spack mediante:</p>
+<pre><code class="language-bash">module load &lt;paquete&gt;/&lt;versión-hash&gt;
+</code></pre>
+<p>sin necesidad de cargar Spack para consumir el software ya publicado.</p>
+<p>Las dependencias son gestionadas automáticamente por Lmod y los módulos se descubren a través de:</p>
+<pre><code class="language-text">/opt/ohpc/pub/moduledeps/spack/Core
+</code></pre>
+<p>que forma parte permanente del <code>MODULEPATH</code> global del sistema.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../03-instalacion-software-con-spack-y-lmod/" class="btn btn-neutral float-left" title="Tutorial de instalación con Spack y Lmod"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../02-uso-slurm/" class="btn btn-neutral float-right" title="Configuración y uso de Slurm">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../03-instalacion-software-con-spack-y-lmod/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../02-uso-slurm/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

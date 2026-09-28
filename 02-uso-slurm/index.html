@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Configuración y uso de Slurm - Documentación de administración del HPC de la Facultad de Ingeniería UNAL</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Configuraci\u00f3n y uso de Slurm";
+        var mkdocs_page_input_path = "02-uso-slurm.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentación de administración del HPC de la Facultad de Ingeniería UNAL
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Inicio</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Acceso al HPC</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../Documentacion_Sistema_Acceso_HPC/">Sistema de acceso y automatización</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Administración de software</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../01-Administracion-Software-Lmod/">Administración con Lmod</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03-instalacion-software-con-spack-y-lmod/">Tutorial de instalación con Spack y Lmod</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04-configuracion-spack-y-lmod/">Guía de configuración de Spack y Lmod</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Configuración y uso de Slurm</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-objetivo">1. Objetivo</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-rol-de-slurm-en-el-hpc">2. Rol de Slurm en el HPC</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-principios-de-diseno-recomendados">3. Principios de diseño recomendados</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-estructura-de-nodos-recomendada">4. Estructura de nodos recomendada</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#5-configuracion-de-particiones">5. Configuración de particiones</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#6-configuracion-basica-de-slurm">6. Configuración básica de Slurm</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#parametros-clave">Parámetros clave</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#7-configuracion-de-nodos">7. Configuración de nodos</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#8-politicas-de-recursos-y-exclusividad">8. Políticas de recursos y exclusividad</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#9-contabilidad-y-auditoria">9. Contabilidad y auditoría</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#10-administracion-de-prioridades-y-cuotas">10. Administración de prioridades y cuotas</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#11-reservas-y-colas-especiales">11. Reservas y colas especiales</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#12-monitoreo-operativo">12. Monitoreo operativo</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#13-buenas-practicas-operativas">13. Buenas prácticas operativas</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#131-mantener-particiones-claras">13.1. Mantener particiones claras</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#132-definir-limites-razonables">13.2. Definir límites razonables</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#133-controlar-el-uso-del-cluster">13.3. Controlar el uso del cluster</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#134-registrar-cambios-de-configuracion">13.4. Registrar cambios de configuración</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#135-validar-despues-de-cambios">13.5. Validar después de cambios</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#14-validacion-de-la-configuracion">14. Validación de la configuración</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#15-procedimiento-operativo-recomendado">15. Procedimiento operativo recomendado</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#16-senales-de-alerta-para-el-administrador">16. Señales de alerta para el administrador</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#17-recomendacion-para-el-hpc-de-la-facultad">17. Recomendación para el HPC de la Facultad</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#18-resumen">18. Resumen</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#16-ejemplo-de-trabajo-paralelo">16. Ejemplo de trabajo paralelo</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#17-ejemplo-de-trabajo-multihilo">17. Ejemplo de trabajo multihilo</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#18-enviar-un-trabajo">18. Enviar un trabajo</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#19-consultar-trabajos">19. Consultar trabajos</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#20-estados-comunes">20. Estados comunes</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#21-cancelar-un-trabajo">21. Cancelar un trabajo</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#22-consultar-las-particiones">22. Consultar las particiones</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#23-consultar-informacion-de-un-trabajo">23. Consultar información de un trabajo</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#24-consultar-trabajos-terminados">24. Consultar trabajos terminados</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#25-revisar-el-uso-de-recursos">25. Revisar el uso de recursos</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#26-variables-utiles-de-slurm">26. Variables útiles de Slurm</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#27-buenas-practicas">27. Buenas prácticas</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#28-flujo-recomendado">28. Flujo recomendado</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#29-ejemplo-completo">29. Ejemplo completo</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#30-referencia-rapida">30. Referencia rápida</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#enviar">Enviar</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#consultar">Consultar</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ver-informacion">Ver información</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#cancelar">Cancelar</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#revisar-un-trabajo-terminado">Revisar un trabajo terminado</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ver-particiones">Ver particiones</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#31-importante">31. Importante</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentación de administración del HPC de la Facultad de Ingeniería UNAL</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Administración de software</li>
+      <li class="breadcrumb-item active">Configuración y uso de Slurm</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="configuracion-y-administracion-de-slurm-en-el-hpc">Configuración y administración de Slurm en el HPC<a class="headerlink" href="#configuracion-y-administracion-de-slurm-en-el-hpc" title="Permanent link">&para;</a></h1>
+<h2 id="1-objetivo">1. Objetivo<a class="headerlink" href="#1-objetivo" title="Permanent link">&para;</a></h2>
+<p>Este documento describe la forma en que Slurm debe configurarse y operar en un entorno HPC para cumplir con estándares habituales de administración, control de recursos, ejecución de trabajos y trazabilidad.</p>
+<p>Está orientado a administradores del cluster, no a usuarios finales. El enfoque principal es definir una base operativa clara para nodos, particiones, colas, contabilidad y políticas de uso.</p>
+<hr />
+<h2 id="2-rol-de-slurm-en-el-hpc">2. Rol de Slurm en el HPC<a class="headerlink" href="#2-rol-de-slurm-en-el-hpc" title="Permanent link">&para;</a></h2>
+<p>Slurm es el planificador de trabajos del clúster. Su función principal es:</p>
+<ul>
+<li>asignar recursos a trabajos según prioridad, políticas y disponibilidad;</li>
+<li>controlar qué nodos pueden ejecutar cada trabajo;</li>
+<li>gestionar particiones y colas de ejecución;</li>
+<li>mantener registro de utilización y contabilidad;</li>
+<li>facilitar la administración del cluster desde una sola capa de programación.</li>
+</ul>
+<p>En un entorno HPC típico, Slurm se usa como la capa central entre:</p>
+<pre><code class="language-text">Usuarios / aplicaciones
+        ↓
+Slurm
+        ↓
+Nodos de cómputo
+</code></pre>
+<p>La administración correcta de Slurm es crítica porque impacta directamente:</p>
+<ul>
+<li>la utilización del clúster;</li>
+<li>la equidad entre usuarios;</li>
+<li>el tiempo de respuesta de los trabajos;</li>
+<li>la trazabilidad y auditoría;</li>
+<li>la estabilidad del sistema.</li>
+</ul>
+<hr />
+<h2 id="3-principios-de-diseno-recomendados">3. Principios de diseño recomendados<a class="headerlink" href="#3-principios-de-diseno-recomendados" title="Permanent link">&para;</a></h2>
+<p>Para un HPC estándar, es recomendable seguir estas directrices:</p>
+<ol>
+<li>Separar nodos de cómputo y nodos de servicios.</li>
+<li>Definir particiones por tipo de trabajo y duración.</li>
+<li>Usar memoria, CPUs y nodos con valores explícitos y consistentes.</li>
+<li>Mantener contabilidad activa para auditoría y análisis.</li>
+<li>Aplicar políticas de prioridad y límites por usuario o grupo.</li>
+<li>Evitar sobreasignación de recursos.</li>
+<li>Asegurar que cada trabajo tenga un tiempo límite y una partición adecuada.</li>
+</ol>
+<hr />
+<h2 id="4-estructura-de-nodos-recomendada">4. Estructura de nodos recomendada<a class="headerlink" href="#4-estructura-de-nodos-recomendada" title="Permanent link">&para;</a></h2>
+<p>Un clúster HPC normalmente se compone de:</p>
+<ul>
+<li>nodos de control o login;</li>
+<li>nodos de cómputo;</li>
+<li>nodos de gestión o almacenamiento;</li>
+<li>nodos de servicios auxiliares.</li>
+</ul>
+<p>En una arquitectura típica, Slurm se despliega con:</p>
+<pre><code class="language-text">ControlMachine: nodo principal de gestión
+Compute Nodes: nodos de cómputo
+Slurmctld: daemon de control
+Slurmd: daemon en cada nodo de cómputo
+</code></pre>
+<p>Un ejemplo habitual de inventario es:</p>
+<pre><code class="language-text">cnode01
+cnode02
+cnode03
+cnode04
+</code></pre>
+<p>Cada nodo debe tener una definición coherente en el archivo de configuración, incluyendo:</p>
+<ul>
+<li>nombre del nodo;</li>
+<li>número de CPUs;</li>
+<li>memoria total;</li>
+<li>particiones permitidas;</li>
+<li>estado operativo;</li>
+<li>recursos especializados, si aplica.</li>
+</ul>
+<hr />
+<h2 id="5-configuracion-de-particiones">5. Configuración de particiones<a class="headerlink" href="#5-configuracion-de-particiones" title="Permanent link">&para;</a></h2>
+<p>Las particiones son uno de los elementos clave para un uso ordenado del clúster. Deben definirse de acuerdo con el tipo de trabajo, duración y prioridad.</p>
+<p>Un esquema estándar es:</p>
+<table>
+<thead>
+<tr>
+<th>Partición</th>
+<th style="text-align: right;">Tiempo máximo</th>
+<th>Propósito</th>
+<th>Uso recomendado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hpc-short</td>
+<td style="text-align: right;">1 hora</td>
+<td>pruebas y trabajos cortos</td>
+<td>validación rápida</td>
+</tr>
+<tr>
+<td>hpc</td>
+<td style="text-align: right;">24 horas</td>
+<td>trabajo general</td>
+<td>producción normal</td>
+</tr>
+<tr>
+<td>hpc-long</td>
+<td style="text-align: right;">72 horas</td>
+<td>trabajos largos</td>
+<td>simulaciones prolongadas</td>
+</tr>
+</tbody>
+</table>
+<p>Una definición típica en Slurm es:</p>
+<pre><code class="language-text">PartitionName=hpc-short Nodes=cnode[01-04] Default=YES MaxTime=01:00:00 State=UP
+PartitionName=hpc Nodes=cnode[01-04] MaxTime=24:00:00 State=UP
+PartitionName=hpc-long Nodes=cnode[01-04] MaxTime=72:00:00 State=UP
+</code></pre>
+<p>Recomendaciones:</p>
+<ul>
+<li>definir una partición default para trabajos estándar;</li>
+<li>reservar particiones específicas para trabajos largos;</li>
+<li>evitar que todos los usuarios envíen trabajos a la misma cola sin límites;</li>
+<li>mantener una política de tiempos clara y consistente.</li>
+</ul>
+<hr />
+<h2 id="6-configuracion-basica-de-slurm">6. Configuración básica de Slurm<a class="headerlink" href="#6-configuracion-basica-de-slurm" title="Permanent link">&para;</a></h2>
+<p>El archivo principal suele ser slurm.conf. En él se definen parámetros globales del sistema. Algunos de los más relevantes son:</p>
+<pre><code class="language-text">ClusterName=HPCFACULTAD
+ControlMachine=slurm-head
+SlurmctldPort=6817
+SlurmdPort=6818
+AccountingStorageType=accounting_storage/slurmdbd
+AccountingStorageHost=slurm-db
+JobAcctGatherType=jobacct_gather/linux
+TaskPlugin=task/affinity
+SelectType=select/cons_res
+SelectTypeParameters=CR_CPU_Memory
+</code></pre>
+<h3 id="parametros-clave">Parámetros clave<a class="headerlink" href="#parametros-clave" title="Permanent link">&para;</a></h3>
+<ul>
+<li>ControlMachine: nodo que ejecuta el daemon de control.</li>
+<li>AccountingStorageType: habilita la contabilidad de trabajos.</li>
+<li>JobAcctGatherType: permite recolectar métricas del trabajo.</li>
+<li>SelectType: define cómo Slurm selecciona recursos.</li>
+<li>TaskPlugin: ayuda con la afinidad y el uso de CPUs.</li>
+</ul>
+<hr />
+<h2 id="7-configuracion-de-nodos">7. Configuración de nodos<a class="headerlink" href="#7-configuracion-de-nodos" title="Permanent link">&para;</a></h2>
+<p>Cada nodo debe describirse con la información física y lógica necesaria para planificar trabajos. Un ejemplo estándar es:</p>
+<pre><code class="language-text">NodeName=cnode[01-04] CPUs=96 Sockets=2 CoresPerSocket=24 ThreadsPerCore=2 RealMemory=250000 State=UNKNOWN
+</code></pre>
+<p>Esto implica que el nodo tiene:</p>
+<ul>
+<li>96 CPUs lógicas;</li>
+<li>2 sockets;</li>
+<li>24 núcleos por socket;</li>
+<li>2 hilos por núcleo;</li>
+<li>250 GB de memoria aproximadamente.</li>
+</ul>
+<p>Desde el punto de vista administrativo, los nodos deben tener una política clara de:</p>
+<ul>
+<li>recursos disponibles;</li>
+<li>estado operativo;</li>
+<li>exclusividad o compartición;</li>
+<li>prevención de contención entre trabajos.</li>
+</ul>
+<hr />
+<h2 id="8-politicas-de-recursos-y-exclusividad">8. Políticas de recursos y exclusividad<a class="headerlink" href="#8-politicas-de-recursos-y-exclusividad" title="Permanent link">&para;</a></h2>
+<p>En HPC, es habitual configurar la partición para que cada trabajo tenga acceso exclusivo a los recursos asignados. Una política común es:</p>
+<pre><code class="language-text">Oversubscribe=NO
+</code></pre>
+<p>o bien en configuraciones más estrictas:</p>
+<pre><code class="language-text">Oversubscribe=EXCLUSIVE
+</code></pre>
+<p>Esto evita que dos trabajos comparten el mismo recurso del mismo nodo y reduce problemas de rendimiento y estabilidad.</p>
+<p>La recomendación general es:</p>
+<ul>
+<li>establecer exclusividad para particiones de cómputo intensivo;</li>
+<li>evitar sobreasignar tareas en los nodos de cómputo;</li>
+<li>documentar cualquier excepción explícitamente.</li>
+</ul>
+<hr />
+<h2 id="9-contabilidad-y-auditoria">9. Contabilidad y auditoría<a class="headerlink" href="#9-contabilidad-y-auditoria" title="Permanent link">&para;</a></h2>
+<p>La contabilidad es una parte esencial de la administración de Slurm. Permite:</p>
+<ul>
+<li>revisar qué trabajos corrieron;</li>
+<li>calcular consumo de CPU, memoria y tiempo;</li>
+<li>detectar uso indebido o abusivo;</li>
+<li>justificar la utilización del clúster ante usuarios o líderes de proyecto;</li>
+<li>generar reportes de mantenimiento y planificación.</li>
+</ul>
+<p>Los comandos más usados para administración son:</p>
+<pre><code class="language-bash">sacct
+sacct -X
+sacct -j 12345
+scontrol show job 12345
+sinfo
+scontrol show partition
+</code></pre>
+<p>La contabilidad debería estar activa para:</p>
+<ul>
+<li>trabajos completados;</li>
+<li>trabajos fallidos;</li>
+<li>trabajos cancelados;</li>
+<li>métricas de recursos usados.</li>
+</ul>
+<hr />
+<h2 id="10-administracion-de-prioridades-y-cuotas">10. Administración de prioridades y cuotas<a class="headerlink" href="#10-administracion-de-prioridades-y-cuotas" title="Permanent link">&para;</a></h2>
+<p>Las políticas de prioridad se pueden definir por:</p>
+<ul>
+<li>usuario;</li>
+<li>grupo;</li>
+<li>partición;</li>
+<li>tipo de trabajo;</li>
+<li>prioridad histórica;</li>
+<li>uso de colas premium o de investigación.</li>
+</ul>
+<p>Lo habitual es implementar una política simple, clara y transparente:</p>
+<ul>
+<li>trabajos cortos tienen prioridad inmediata si son necesarios para pruebas;</li>
+<li>trabajos largos se encolan con tiempos de espera razonables;</li>
+<li>trabajos críticos del centro o de investigación se gestionan con prioridad explícita.</li>
+</ul>
+<p>En la práctica, un administrador debe revisar:</p>
+<ul>
+<li>cuánto tiempo está esperando cada trabajo;</li>
+<li>si hay usuarios monopolizando recursos;</li>
+<li>si una partición está saturada;</li>
+<li>si existen trabajos de larga duración acumulando prioridad.</li>
+</ul>
+<hr />
+<h2 id="11-reservas-y-colas-especiales">11. Reservas y colas especiales<a class="headerlink" href="#11-reservas-y-colas-especiales" title="Permanent link">&para;</a></h2>
+<p>Los administradores suelen crear reservas para:</p>
+<ul>
+<li>mantenimiento del clúster;</li>
+<li>nodos especiales para investigación o cursos;</li>
+<li>pruebas de software antes de publicarlo;</li>
+<li>trabajos de sistema o soporte.</li>
+</ul>
+<p>Ejemplo de reserva:</p>
+<pre><code class="language-text">ReservationName=maintenance StartTime=2026-09-01T00:00:00 EndTime=2026-09-01T04:00:00 Nodes=cnode[01-04] Flags=MAINT
+</code></pre>
+<p>Esto permite aislar recursos para tareas operativas sin afectar el trabajo normal de los usuarios.</p>
+<hr />
+<h2 id="12-monitoreo-operativo">12. Monitoreo operativo<a class="headerlink" href="#12-monitoreo-operativo" title="Permanent link">&para;</a></h2>
+<p>Un administrador debe revisar periódicamente:</p>
+<ul>
+<li>estado de nodos en sinfo;</li>
+<li>trabajos activos con squeue;</li>
+<li>trabajos terminados con sacct;</li>
+<li>ocupación por partición;</li>
+<li>errores de nodos o de ejecución.</li>
+</ul>
+<p>Los comandos principales son:</p>
+<pre><code class="language-bash">sinfo -N
+sinfo -l
+squeue
+squeue -l
+scontrol show node cnode01
+scontrol show partition hpc
+</code></pre>
+<p>También es recomendable registrar:</p>
+<ul>
+<li>nodos caídos;</li>
+<li>particiones saturadas;</li>
+<li>trabajos repetidos con errores;</li>
+<li>tiempos de espera promedio;</li>
+<li>historial de mantenimiento.</li>
+</ul>
+<hr />
+<h2 id="13-buenas-practicas-operativas">13. Buenas prácticas operativas<a class="headerlink" href="#13-buenas-practicas-operativas" title="Permanent link">&para;</a></h2>
+<h3 id="131-mantener-particiones-claras">13.1. Mantener particiones claras<a class="headerlink" href="#131-mantener-particiones-claras" title="Permanent link">&para;</a></h3>
+<p>Cada partición debe responder a una necesidad específica. No es recomendable crear demasiadas colas sin criterio claro.</p>
+<h3 id="132-definir-limites-razonables">13.2. Definir límites razonables<a class="headerlink" href="#132-definir-limites-razonables" title="Permanent link">&para;</a></h3>
+<p>Los tiempos máximos y la memoria por trabajo deben ser proporcionales a los recursos reales del clúster.</p>
+<h3 id="133-controlar-el-uso-del-cluster">13.3. Controlar el uso del cluster<a class="headerlink" href="#133-controlar-el-uso-del-cluster" title="Permanent link">&para;</a></h3>
+<p>Los trabajos que consuman demasiados recursos deben estar sujetos a políticas de revisión.</p>
+<h3 id="134-registrar-cambios-de-configuracion">13.4. Registrar cambios de configuración<a class="headerlink" href="#134-registrar-cambios-de-configuracion" title="Permanent link">&para;</a></h3>
+<p>Cada cambio en Slurm debe documentarse para evitar degradación del servicio. Es útil mantener un historial de:</p>
+<ul>
+<li>cambios de particiones;</li>
+<li>ajustes de prioridad;</li>
+<li>nuevas reservas;</li>
+<li>cambios de nodos o memoria;</li>
+<li>actualizaciones de configuración.</li>
+</ul>
+<h3 id="135-validar-despues-de-cambios">13.5. Validar después de cambios<a class="headerlink" href="#135-validar-despues-de-cambios" title="Permanent link">&para;</a></h3>
+<p>Cuando se actualiza slurm.conf o se altera la topología del cluster, se debe validar la configuración antes de recargar el servicio.</p>
+<pre><code class="language-bash">scontrol reconfigure
+</code></pre>
+<p>y revisar el estado general con:</p>
+<pre><code class="language-bash">sinfo
+squeue
+</code></pre>
+<hr />
+<h2 id="14-validacion-de-la-configuracion">14. Validación de la configuración<a class="headerlink" href="#14-validacion-de-la-configuracion" title="Permanent link">&para;</a></h2>
+<p>Antes de poner una nueva configuración en producción, el administrador debe verificar lo siguiente:</p>
+<ul>
+<li>que el archivo de configuración no tiene errores sintácticos;</li>
+<li>que los nodos están definidos con los recursos correctos;</li>
+<li>que las particiones tienen tiempos sanos;</li>
+<li>que los nodos de cómputo aparecen correctamente en sinfo;</li>
+<li>que la contabilidad está funcionando;</li>
+<li>que la prioridad y los límites no bloquean trabajos válidos.</li>
+</ul>
+<p>Comandos recomendados:</p>
+<pre><code class="language-bash">sacctmgr list cluster
+sinfo -N
+scontrol show partition
+scontrol show node
+</code></pre>
+<hr />
+<h2 id="15-procedimiento-operativo-recomendado">15. Procedimiento operativo recomendado<a class="headerlink" href="#15-procedimiento-operativo-recomendado" title="Permanent link">&para;</a></h2>
+<p>Un administrador de HPC debería seguir este flujo para mantener Slurm saludable:</p>
+<ol>
+<li>Revisar el estado del clúster.</li>
+<li>Verificar nodos y particiones.</li>
+<li>Confirmar carga de trabajo y tiempos de espera.</li>
+<li>Revisar la contabilidad y posibles anomalías.</li>
+<li>Ajustar políticas o reservas si es necesario.</li>
+<li>Validar con sinfo y squeue.</li>
+<li>Documentar cualquier cambio realizado.</li>
+</ol>
+<hr />
+<h2 id="16-senales-de-alerta-para-el-administrador">16. Señales de alerta para el administrador<a class="headerlink" href="#16-senales-de-alerta-para-el-administrador" title="Permanent link">&para;</a></h2>
+<p>Debe prestarse atención a estas situaciones:</p>
+<ul>
+<li>partición completamente saturada;</li>
+<li>nodos marcados como down;</li>
+<li>trabajos pendientes durante tiempos excesivos;</li>
+<li>consumo de memoria muy elevado en nodos compartidos;</li>
+<li>trabajos que no terminan por errores recurrentes;</li>
+<li>fallas de contabilidad o de persistencia de trabajos.</li>
+</ul>
+<hr />
+<h2 id="17-recomendacion-para-el-hpc-de-la-facultad">17. Recomendación para el HPC de la Facultad<a class="headerlink" href="#17-recomendacion-para-el-hpc-de-la-facultad" title="Permanent link">&para;</a></h2>
+<p>Para este entorno, el modelo más saneado es:</p>
+<ul>
+<li>definir particiones por duración y uso;</li>
+<li>mantener nodos homogéneos y bien documentados;</li>
+<li>activar contabilidad desde el inicio;</li>
+<li>usar políticas claras de prioridad y recursos;</li>
+<li>reservar capacidad para trabajo de soporte y validación;</li>
+<li>documentar cualquier modificación en la topología o en la configuración.</li>
+</ul>
+<p>Un esquema recomendado para el clúster es:</p>
+<pre><code class="language-text">Nodos de cómputo: cnode[01-04]
+Particiones: hpc-short, hpc, hpc-long
+Contabilidad: activada
+Prioridad: equilibrio por usuario y partición
+Reservas: mantenimiento y pruebas
+</code></pre>
+<hr />
+<h2 id="18-resumen">18. Resumen<a class="headerlink" href="#18-resumen" title="Permanent link">&para;</a></h2>
+<p>Slurm debe configurarse como la base operacional del clúster. No es solo un sistema para enviar trabajos, sino la capa central de administración del recurso computacional.</p>
+<p>Desde el punto de vista del administrador, lo esencial es:</p>
+<ul>
+<li>mantener una configuración coherente;</li>
+<li>definir particiones con sentido;</li>
+<li>controlar recursos y memoria;</li>
+<li>activar y revisar contabilidad;</li>
+<li>monitorear nodos y trabajos;</li>
+<li>documentar cambios y mantener políticas claras.</li>
+</ul>
+<p>Una buena administración de Slurm permite un clúster más estable, más justo y más predecible para toda la comunidad de usuarios.</p>
+<h2 id="16-ejemplo-de-trabajo-paralelo">16. Ejemplo de trabajo paralelo<a class="headerlink" href="#16-ejemplo-de-trabajo-paralelo" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">#!/bin/bash
+
+#SBATCH --job-name=mpi_test
+#SBATCH --partition=hpc
+#SBATCH --time=02:00:00
+#SBATCH --ntasks=8
+#SBATCH --mem=8G
+
+module purge
+module load gnu14
+module load openmpi5
+
+module list
+
+srun ./mi_programa
+</code></pre>
+<h2 id="17-ejemplo-de-trabajo-multihilo">17. Ejemplo de trabajo multihilo<a class="headerlink" href="#17-ejemplo-de-trabajo-multihilo" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">#!/bin/bash
+
+#SBATCH --job-name=multihilo
+#SBATCH --partition=hpc-short
+#SBATCH --time=00:30:00
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=8G
+
+module purge
+module load &lt;aplicacion&gt;/&lt;version&gt;
+
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+
+srun ./mi_programa
+</code></pre>
+<h2 id="18-enviar-un-trabajo">18. Enviar un trabajo<a class="headerlink" href="#18-enviar-un-trabajo" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">sbatch trabajo.slurm
+</code></pre>
+<p>Slurm devolverá un identificador:</p>
+<pre><code class="language-text">Submitted batch job 12345
+</code></pre>
+<h2 id="19-consultar-trabajos">19. Consultar trabajos<a class="headerlink" href="#19-consultar-trabajos" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">squeue -u $USER
+</code></pre>
+<p>Trabajo específico:</p>
+<pre><code class="language-bash">squeue -j &lt;jobid&gt;
+</code></pre>
+<h2 id="20-estados-comunes">20. Estados comunes<a class="headerlink" href="#20-estados-comunes" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Estado</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PD</code></td>
+<td>Pendiente</td>
+</tr>
+<tr>
+<td><code>R</code></td>
+<td>Ejecutándose</td>
+</tr>
+<tr>
+<td><code>CG</code></td>
+<td>Finalizando</td>
+</tr>
+<tr>
+<td><code>CD</code></td>
+<td>Completado</td>
+</tr>
+<tr>
+<td><code>F</code></td>
+<td>Fallido</td>
+</tr>
+<tr>
+<td><code>CA</code></td>
+<td>Cancelado</td>
+</tr>
+</tbody>
+</table>
+<h2 id="21-cancelar-un-trabajo">21. Cancelar un trabajo<a class="headerlink" href="#21-cancelar-un-trabajo" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">scancel &lt;jobid&gt;
+</code></pre>
+<p>Ejemplo:</p>
+<pre><code class="language-bash">scancel 12345
+</code></pre>
+<p>Para cancelar todos los trabajos propios:</p>
+<pre><code class="language-bash">scancel -u $USER
+</code></pre>
+<p>Utilice esta opción con cuidado.</p>
+<h2 id="22-consultar-las-particiones">22. Consultar las particiones<a class="headerlink" href="#22-consultar-las-particiones" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">sinfo
+</code></pre>
+<p>Vista resumida:</p>
+<pre><code class="language-bash">sinfo -o &quot;%P %a %l %D %C&quot;
+</code></pre>
+<h2 id="23-consultar-informacion-de-un-trabajo">23. Consultar información de un trabajo<a class="headerlink" href="#23-consultar-informacion-de-un-trabajo" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">scontrol show job &lt;jobid&gt;
+</code></pre>
+<h2 id="24-consultar-trabajos-terminados">24. Consultar trabajos terminados<a class="headerlink" href="#24-consultar-trabajos-terminados" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">sacct
+</code></pre>
+<p>Trabajo específico:</p>
+<pre><code class="language-bash">sacct -j &lt;jobid&gt;
+</code></pre>
+<p>También:</p>
+<pre><code class="language-bash">sacct -j &lt;jobid&gt; --format=JobID,JobName,Partition,State,Elapsed,AllocCPUS,MaxRSS
+</code></pre>
+<h2 id="25-revisar-el-uso-de-recursos">25. Revisar el uso de recursos<a class="headerlink" href="#25-revisar-el-uso-de-recursos" title="Permanent link">&para;</a></h2>
+<p>Después de ejecutar un trabajo:</p>
+<pre><code class="language-bash">sacct -j &lt;jobid&gt; --format=JobID,State,Elapsed,AllocCPUS,MaxRSS
+</code></pre>
+<p>Esto ayuda a comprobar si los recursos solicitados fueron adecuados.</p>
+<h2 id="26-variables-utiles-de-slurm">26. Variables útiles de Slurm<a class="headerlink" href="#26-variables-utiles-de-slurm" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Información</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$SLURM_JOB_ID</code></td>
+<td>Identificador del trabajo</td>
+</tr>
+<tr>
+<td><code>$SLURM_JOB_NAME</code></td>
+<td>Nombre del trabajo</td>
+</tr>
+<tr>
+<td><code>$SLURM_JOB_NODELIST</code></td>
+<td>Nodos asignados</td>
+</tr>
+<tr>
+<td><code>$SLURM_NTASKS</code></td>
+<td>Número de tareas</td>
+</tr>
+<tr>
+<td><code>$SLURM_CPUS_PER_TASK</code></td>
+<td>CPU por tarea</td>
+</tr>
+<tr>
+<td><code>$SLURM_JOB_PARTITION</code></td>
+<td>Partición utilizada</td>
+</tr>
+</tbody>
+</table>
+<p>Ejemplo:</p>
+<pre><code class="language-bash">echo &quot;Job ID: $SLURM_JOB_ID&quot;
+echo &quot;Partición: $SLURM_JOB_PARTITION&quot;
+echo &quot;Tareas: $SLURM_NTASKS&quot;
+</code></pre>
+<h2 id="27-buenas-practicas">27. Buenas prácticas<a class="headerlink" href="#27-buenas-practicas" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Solicitar únicamente los recursos necesarios.</li>
+<li>Elegir la partición según la duración real del trabajo.</li>
+<li>Solicitar un tiempo razonable.</li>
+<li>Cargar los módulos dentro del script.</li>
+<li>Utilizar <code>srun</code> para ejecutar el programa con los recursos asignados.</li>
+<li>Revisar el consumo con <code>sacct</code>.</li>
+<li>No seleccionar manualmente un nodo para trabajos normales.</li>
+</ul>
+<h2 id="28-flujo-recomendado">28. Flujo recomendado<a class="headerlink" href="#28-flujo-recomendado" title="Permanent link">&para;</a></h2>
+<pre><code class="language-text">Preparar script
+      ↓
+Solicitar recursos
+      ↓
+Cargar módulos
+      ↓
+Enviar con sbatch
+      ↓
+Consultar con squeue
+      ↓
+Ejecutar
+      ↓
+Revisar resultados
+      ↓
+Consultar consumo con sacct
+</code></pre>
+<h2 id="29-ejemplo-completo">29. Ejemplo completo<a class="headerlink" href="#29-ejemplo-completo" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">#!/bin/bash
+
+#SBATCH --job-name=simulacion
+#SBATCH --partition=hpc
+#SBATCH --time=04:00:00
+#SBATCH --ntasks=8
+#SBATCH --mem=16G
+#SBATCH --output=simulacion_%j.out
+#SBATCH --error=simulacion_%j.err
+
+module purge
+module load gnu14
+module load openmpi5
+
+echo &quot;Job ID: $SLURM_JOB_ID&quot;
+echo &quot;Partición: $SLURM_JOB_PARTITION&quot;
+echo &quot;Tareas: $SLURM_NTASKS&quot;
+
+module list
+
+cd ~/proyecto
+
+srun ./mi_programa
+</code></pre>
+<p>Enviar:</p>
+<pre><code class="language-bash">sbatch simulacion.slurm
+</code></pre>
+<p>Consultar:</p>
+<pre><code class="language-bash">squeue -u $USER
+</code></pre>
+<p>Cuando termine:</p>
+<pre><code class="language-bash">sacct -j &lt;jobid&gt;
+</code></pre>
+<h2 id="30-referencia-rapida">30. Referencia rápida<a class="headerlink" href="#30-referencia-rapida" title="Permanent link">&para;</a></h2>
+<h3 id="enviar">Enviar<a class="headerlink" href="#enviar" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash">sbatch trabajo.slurm
+</code></pre>
+<h3 id="consultar">Consultar<a class="headerlink" href="#consultar" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash">squeue -u $USER
+</code></pre>
+<h3 id="ver-informacion">Ver información<a class="headerlink" href="#ver-informacion" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash">scontrol show job &lt;jobid&gt;
+</code></pre>
+<h3 id="cancelar">Cancelar<a class="headerlink" href="#cancelar" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash">scancel &lt;jobid&gt;
+</code></pre>
+<h3 id="revisar-un-trabajo-terminado">Revisar un trabajo terminado<a class="headerlink" href="#revisar-un-trabajo-terminado" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash">sacct -j &lt;jobid&gt;
+</code></pre>
+<h3 id="ver-particiones">Ver particiones<a class="headerlink" href="#ver-particiones" title="Permanent link">&para;</a></h3>
+<pre><code class="language-bash">sinfo
+</code></pre>
+<h2 id="31-importante">31. Importante<a class="headerlink" href="#31-importante" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Los trabajos de cómputo deben enviarse mediante Slurm.</li>
+<li>No se debe seleccionar manualmente un nodo para un trabajo normal.</li>
+<li>Se debe elegir la partición de acuerdo con la duración del trabajo.</li>
+<li>No se deben solicitar más CPU, memoria o tiempo del necesario.</li>
+<li>Los módulos deben cargarse dentro del script.</li>
+<li>La aplicación debe ejecutarse utilizando los recursos solicitados.</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../04-configuracion-spack-y-lmod/" class="btn btn-neutral float-left" title="Guía de configuración de Spack y Lmod"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../04-configuracion-spack-y-lmod/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

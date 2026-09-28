@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Tutorial de instalación con Spack y Lmod - Documentación de administración del HPC de la Facultad de Ingeniería UNAL</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Tutorial de instalaci\u00f3n con Spack y Lmod";
+        var mkdocs_page_input_path = "03-instalacion-software-con-spack-y-lmod.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Documentación de administración del HPC de la Facultad de Ingeniería UNAL
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Inicio</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Acceso al HPC</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../Documentacion_Sistema_Acceso_HPC/">Sistema de acceso y automatización</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Administración de software</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../01-Administracion-Software-Lmod/">Administración con Lmod</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Tutorial de instalación con Spack y Lmod</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-objetivo">1. Objetivo</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-panorama-general">2. Panorama general</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-requisitos-previos">3. Requisitos previos</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-usar-umask-022">4. Usar umask 022</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#5-buscar-el-paquete">5. Buscar el paquete</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#6-revisar-la-especificacion">6. Revisar la especificación</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#7-instalar-el-software">7. Instalar el software</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#8-verificar-la-instalacion">8. Verificar la instalación</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#9-verificar-el-modulo-lmod">9. Verificar el módulo Lmod</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#10-cargar-y-probar-el-software">10. Cargar y probar el software</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#11-probar-desde-un-entorno-limpio">11. Probar desde un entorno limpio</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#12-resumen-operativo">12. Resumen operativo</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04-configuracion-spack-y-lmod/">Guía de configuración de Spack y Lmod</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02-uso-slurm/">Configuración y uso de Slurm</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Documentación de administración del HPC de la Facultad de Ingeniería UNAL</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Administración de software</li>
+      <li class="breadcrumb-item active">Tutorial de instalación con Spack y Lmod</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="tutorial-de-instalacion-de-software-con-spack-y-lmod">Tutorial de instalación de software con Spack y Lmod<a class="headerlink" href="#tutorial-de-instalacion-de-software-con-spack-y-lmod" title="Permanent link">&para;</a></h1>
+<h2 id="1-objetivo">1. Objetivo<a class="headerlink" href="#1-objetivo" title="Permanent link">&para;</a></h2>
+<p>Este tutorial describe el flujo operativo para instalar software con Spack y dejarlo disponible para los usuarios mediante módulos Lmod.</p>
+<p>El objetivo es que el administrador pueda repetir el proceso de forma segura, consistente y con permisos adecuados para un entorno compartido.</p>
+<h2 id="2-panorama-general">2. Panorama general<a class="headerlink" href="#2-panorama-general" title="Permanent link">&para;</a></h2>
+<p>El flujo recomendado es el siguiente:</p>
+<pre><code class="language-text">Administrador
+  │
+  ▼
+module load spack
+  │
+  ▼
+umask 022
+  │
+  ▼
+spack spec -Il paquete
+  │
+  ▼
+spack install paquete
+  │
+  ▼
+Spack genera el módulo Lmod
+  │
+  ▼
+module load paquete/version-hash
+</code></pre>
+<p>En este entorno, los módulos generados por Spack se publican para Lmod en el árbol compartido del clúster, por lo que los usuarios no necesitan reconstruir nada para usar el software.</p>
+<h2 id="3-requisitos-previos">3. Requisitos previos<a class="headerlink" href="#3-requisitos-previos" title="Permanent link">&para;</a></h2>
+<p>Antes de instalar un paquete, verifique que Spack esté disponible:</p>
+<pre><code class="language-bash">module load spack
+spack --version
+</code></pre>
+<p>En la configuración actual del clúster se utiliza:</p>
+<pre><code class="language-text">Spack 0.23.1
+Lmod 8.7.59
+gcc@14.2.0
+</code></pre>
+<h2 id="4-usar-umask-022">4. Usar <code>umask 022</code><a class="headerlink" href="#4-usar-umask-022" title="Permanent link">&para;</a></h2>
+<p>Antes de instalar software compartido, establezca:</p>
+<pre><code class="language-bash">umask 022
+</code></pre>
+<p>Esto evita que los archivos y directorios se creen con permisos demasiado restrictivos para otros usuarios del clúster.</p>
+<p>Con esta configuración, los permisos normales para un árbol compartido suelen quedar en:</p>
+<ul>
+<li>directorios: <code>755</code></li>
+<li>archivos: <code>644</code></li>
+</ul>
+<p>¿Por qué?</p>
+<p><code>umask</code> determina los permisos iniciales con los que se crean archivos y directorios.</p>
+<p>En este sistema existe una política global que establece:</p>
+<pre><code class="language-text">umask 0077
+</code></pre>
+<p>Este valor es apropiado para ciertos archivos personales porque restringe el acceso a otros usuarios.</p>
+<p>Sin embargo, <strong>no es adecuado para un árbol de software compartido mediante Lmod</strong>.</p>
+<p>Por ejemplo, con:</p>
+<pre><code class="language-text">umask 0077
+</code></pre>
+<p>un directorio creado con usuario root normalmente termina con permisos:</p>
+<pre><code class="language-text">700
+</code></pre>
+<p>y un archivo termina con permisos:</p>
+<pre><code class="language-text">600
+</code></pre>
+<p>Esto significa que solamente el propietario puede acceder a ellos.</p>
+<p>Para software compartido, los módulos Lmod deben ser legibles y atravesables por los usuarios. Por ello, para las instalaciones manuales de software compartido utilizamos:</p>
+<pre><code class="language-bash">umask 022
+</code></pre>
+<p>Con <code>umask 022</code>, los permisos habituales resultantes son:</p>
+<pre><code class="language-text">directorios: 755
+archivos:    644
+</code></pre>
+<p>Esto permite:</p>
+<ul>
+<li>al propietario: leer, escribir y ejecutar;</li>
+<li>a otros usuarios: leer y, en el caso de directorios, atravesarlos.</li>
+</ul>
+<p><strong>Importante:</strong> este procedimiento no requiere cambiar la política global del sistema. No se debe modificar <code>/etc/profile.d/systemWide_umask.sh</code> solamente para instalar software con Spack.</p>
+<p>El <code>umask 022</code> se establece explícitamente en la sesión administrativa que realiza la instalación.</p>
+<h2 id="5-buscar-el-paquete">5. Buscar el paquete<a class="headerlink" href="#5-buscar-el-paquete" title="Permanent link">&para;</a></h2>
+<p>Primero confirme que Spack conoce el paquete:</p>
+<pre><code class="language-bash">spack list cowsay
+spack list &lt;paquete&gt;
+</code></pre>
+<p>Si el paquete ya existe en el árbol de Spack, puede revisarlo con:</p>
+<pre><code class="language-bash">spack find cowsay
+</code></pre>
+<h2 id="6-revisar-la-especificacion">6. Revisar la especificación<a class="headerlink" href="#6-revisar-la-especificacion" title="Permanent link">&para;</a></h2>
+<p>Antes de instalar, conviene ver qué versión, compilador y dependencias resolverá Spack:</p>
+<pre><code class="language-bash">spack spec -Il cowsay
+spack spec -Il &lt;paquete&gt;
+</code></pre>
+<p>Esto ayuda a confirmar que la instalación se hará con el compilador y las variantes correctas.</p>
+<h2 id="7-instalar-el-software">7. Instalar el software<a class="headerlink" href="#7-instalar-el-software" title="Permanent link">&para;</a></h2>
+<p>Con el <code>umask</code> ya configurado, instale el paquete:</p>
+<pre><code class="language-bash">spack install cowsay
+spack install &lt;paquete&gt;
+</code></pre>
+<p>Spack descarga el código fuente, resuelve dependencias, compila el software y lo instala en el árbol compartido del clúster.</p>
+<h2 id="8-verificar-la-instalacion">8. Verificar la instalación<a class="headerlink" href="#8-verificar-la-instalacion" title="Permanent link">&para;</a></h2>
+<p>Después de instalar, confirme que el paquete quedó registrado:</p>
+<pre><code class="language-bash">spack find cowsay
+spack find -p cowsay
+</code></pre>
+<p>En este entorno, las instalaciones quedan bajo:</p>
+<pre><code class="language-text">/opt/ohpc/pub/apps/spack/local
+</code></pre>
+<h2 id="9-verificar-el-modulo-lmod">9. Verificar el módulo Lmod<a class="headerlink" href="#9-verificar-el-modulo-lmod" title="Permanent link">&para;</a></h2>
+<p>Spack genera el módulo Lmod automáticamente. Para comprobarlo:</p>
+<pre><code class="language-bash">module avail cowsay
+module spider cowsay
+</code></pre>
+<p>El nombre del módulo sigue el patrón:</p>
+<pre><code class="language-text">nombre/version-hash
+</code></pre>
+<p>Por ejemplo:</p>
+<pre><code class="language-text">cowsay/3.04-iz6qek4
+</code></pre>
+<h2 id="10-cargar-y-probar-el-software">10. Cargar y probar el software<a class="headerlink" href="#10-cargar-y-probar-el-software" title="Permanent link">&para;</a></h2>
+<p>Cargue el módulo generado por Spack:</p>
+<pre><code class="language-bash">module load cowsay/3.04-iz6qek4
+</code></pre>
+<p>Luego verifique el ejecutable:</p>
+<pre><code class="language-bash">which cowsay
+cowsay &quot;Spack + Lmod funcionan&quot;
+</code></pre>
+<p>Si el comando responde correctamente, el paquete quedó disponible para los usuarios del clúster.</p>
+<h2 id="11-probar-desde-un-entorno-limpio">11. Probar desde un entorno limpio<a class="headerlink" href="#11-probar-desde-un-entorno-limpio" title="Permanent link">&para;</a></h2>
+<p>Para descartar dependencias accidentales de la sesión actual, pruebe desde un entorno limpio y desde un usuario no root:</p>
+<pre><code class="language-bash">module purge
+module load cowsay/3.04-iz6qek4
+which cowsay
+cowsay &quot;Prueba desde entorno limpio&quot;
+</code></pre>
+<h2 id="12-resumen-operativo">12. Resumen operativo<a class="headerlink" href="#12-resumen-operativo" title="Permanent link">&para;</a></h2>
+<pre><code class="language-bash">module load spack
+umask 022
+
+spack list &lt;paquete&gt;
+spack spec -Il &lt;paquete&gt;
+spack install &lt;paquete&gt;
+
+spack find &lt;paquete&gt;
+module avail &lt;paquete&gt;
+module load &lt;paquete&gt;/&lt;version&gt;-&lt;hash&gt;
+which &lt;ejecutable&gt;
+</code></pre>
+<p>Si la salida es correcta, el software queda listo para uso compartido mediante Lmod.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../01-Administracion-Software-Lmod/" class="btn btn-neutral float-left" title="Administración con Lmod"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../04-configuracion-spack-y-lmod/" class="btn btn-neutral float-right" title="Guía de configuración de Spack y Lmod">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../01-Administracion-Software-Lmod/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../04-configuracion-spack-y-lmod/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
