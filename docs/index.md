@@ -14,5 +14,5 @@ Esta documentación está dirigida a los administradores del HPC de la Facultad 
 
 - Documentar procesos de provisión y registro de usuarios.
 - Documentar estrategias de instalación y publicación de software (Spack, EasyBuild, manual).
-- Documentar istalación de software con Spack y su configuración.
+- Documentar instalación de software con Spack y su configuración.
 - Centralizar buenas prácticas de administración y seguridad.
